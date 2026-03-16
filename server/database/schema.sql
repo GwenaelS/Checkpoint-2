@@ -1,21 +1,31 @@
-create table user (
-  id int unsigned primary key auto_increment not null,
-  email varchar(255) not null unique,
-  password varchar(255) not null
+CREATE DATABASE IF NOT EXISTS checkpoint2;
+USE checkpoint2;
+
+CREATE TABLE user (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  username VARCHAR(50),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
 );
 
-create table item (
-  id int unsigned primary key auto_increment not null,
-  title varchar(255) not null,
-  user_id int unsigned not null,
-  foreign key(user_id) references user(id)
+CREATE TABLE project (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  status ENUM('To Do', 'In Progress', 'Done'),
+  created_by INT UNSIGNED NOT NULL,
+  foreign key(created_by) REFERENCES user(id)
 );
 
-insert into user(id, email, password)
-values
-  (1, "jdoe@mail.com", "123456");
+CREATE TABLE task (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  status ENUM('To Do', 'In Progress', 'Done'),
+  user_id INT UNSIGNED NOT NULL,
+  project_id INT UNSIGNED NOT NULL,
+  foreign key(user_id) REFERENCES user(id),
+  foreign key(project_id) REFERENCES project(id)
+);
 
-insert into item(id, title, user_id)
-values
-  (1, "Stuff", 1),
-  (2, "Doodads", 1);
+INSERT INTO user(id, username, email, password) VALUES (1, "zenji", "zenji@mail.com", "123456");
