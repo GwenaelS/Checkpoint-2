@@ -60,4 +60,26 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add };
+const destroy: RequestHandler = async (req, res, next) => {
+  try {
+    // Extract the task ID from the request parameters
+    const taskId = Number(req.params.id);
+    const task = await taskRepository.read(taskId);
+
+    // If the task is not found, respond with HTTP 404 (Not Found)
+    if (task == null) {
+      res.sendStatus(404);
+    } else {
+      // Delete the task
+      const result = await taskRepository.delete(taskId);
+
+      // Respond with HTTP 204 (No Content) to indicate successful deletion
+      res.sendStatus(204);
+    }
+  } catch (err) {
+    // Pass any errors to the error-handling middleware
+    next(err);
+  }
+};
+
+export default { browse, read, add, destroy };

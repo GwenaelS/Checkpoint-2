@@ -58,4 +58,26 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add };
+const destroy: RequestHandler = async (req, res, next) => {
+  try {
+    // Extract the user ID from the request parameters
+    const userId = Number(req.params.id);
+    const user = await userRepository.read(userId);
+
+    // If the user is not found, respond with HTTP 404 (Not Found)
+    if (user == null) {
+      res.sendStatus(404);
+    } else {
+      // Delete the user
+      const result = await userRepository.delete(userId);
+
+      // Respond with HTTP 204 (No Content) to indicate successful deletion
+      res.sendStatus(204);
+    }
+  } catch (err) {
+    // Pass any errors to the error-handling middleware
+    next(err);
+  }
+};
+
+export default { browse, read, add, destroy };

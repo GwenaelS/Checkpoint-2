@@ -60,11 +60,11 @@ class TaskRepository {
   // }
 
   // The D of CRUD - Delete operation
-  // TODO: Implement the delete operation to remove an existing task by its ID
 
-  // async delete(id: number) {
-  //   ...
-  // }
+  async delete(id: number) {
+    // Execute the SQL DELETE query to remove a specific task by its ID
+    await databaseClient.query("delete from task where id = ?", [id]);
+  }
 }
 
 export default new TaskRepository();

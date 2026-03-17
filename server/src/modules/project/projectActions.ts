@@ -59,4 +59,26 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add };
+const destroy: RequestHandler = async (req, res, next) => {
+  try {
+    // Extract the project ID from the request parameters
+    const projectId = Number(req.params.id);
+    const project = await projectRepository.read(projectId);
+
+    // If the project is not found, respond with HTTP 404 (Not Found)
+    if (project == null) {
+      res.sendStatus(404);
+    } else {
+      // Delete the project
+      const result = await projectRepository.delete(projectId);
+
+      // Respond with HTTP 204 (No Content) to indicate successful deletion
+      res.sendStatus(204);
+    }
+  } catch (err) {
+    // Pass any errors to the error-handling middleware
+    next(err);
+  }
+};
+
+export default { browse, read, add, destroy };
