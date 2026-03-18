@@ -36,6 +36,17 @@ class UserRepository {
     return rows[0] as User;
   }
 
+  async readEmail(email: string) {
+    // Execute the SQL SELECT query to retrieve a specific item by its email
+    const [rows] = await databaseClient.query<Rows>(
+      "select * from user where email = ?",
+      [email],
+    );
+
+    // Return the first row of the result, which represents the item
+    return rows[0] as User;
+  }
+
   async readAll() {
     // Execute the SQL SELECT query to retrieve all items from the "item" table
     const [rows] = await databaseClient.query<Rows>("select * from user");
