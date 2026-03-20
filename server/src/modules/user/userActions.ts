@@ -1,6 +1,7 @@
 import argon2 from "argon2";
 import type { RequestHandler } from "express";
 
+import type { AuthRequest } from "../../middlewares/tokenVerify";
 // Import access to data
 import userRepository from "./userRepository";
 
@@ -32,6 +33,24 @@ const read: RequestHandler = async (req, res, next) => {
     } else {
       res.json(user);
     }
+  } catch (err) {
+    // Pass any errors to the error-handling middleware
+    next(err);
+  }
+};
+
+const getMe: RequestHandler = async (req: AuthRequest, res, next) => {
+  try {
+    // Extract the user ID from the authenticated request
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized: No user information" });
+      return;
+    }
+    const userId = req.user.id;
+
+    // Fetch the user based on the extracted user ID
+    const user = await userRepository.read(userId);
+    res.json(user);
   } catch (err) {
     // Pass any errors to the error-handling middleware
     next(err);
@@ -97,4 +116,4 @@ const destroy: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add, destroy };
+export default { browse, read, add, destroy, getMe };
