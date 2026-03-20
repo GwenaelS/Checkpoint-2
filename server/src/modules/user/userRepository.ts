@@ -26,41 +26,48 @@ class UserRepository {
   // The Rs of CRUD - Read operations
 
   async read(id: number) {
-    // Execute the SQL SELECT query to retrieve a specific item by its ID
+    // Execute the SQL SELECT query to retrieve a specific user by its ID
     const [rows] = await databaseClient.query<Rows>(
       "select * from user where id = ?",
       [id],
     );
 
-    // Return the first row of the result, which represents the item
+    // Return the first row of the result, which represents the user
     return rows[0] as User;
   }
 
   async readEmail(email: string) {
-    // Execute the SQL SELECT query to retrieve a specific item by its email
+    // Execute the SQL SELECT query to retrieve a specific user by its email
     const [rows] = await databaseClient.query<Rows>(
       "select * from user where email = ?",
       [email],
     );
 
-    // Return the first row of the result, which represents the item
+    // Return the first row of the result, which represents the user
     return rows[0] as User;
   }
 
   async readAll() {
-    // Execute the SQL SELECT query to retrieve all items from the "item" table
+    // Execute the SQL SELECT query to retrieve all users from the "user" table
     const [rows] = await databaseClient.query<Rows>("select * from user");
 
-    // Return the array of items
+    // Return the array of users
     return rows as User[];
   }
 
   // The U of CRUD - Update operation
-  // TODO: Implement the update operation to modify an existing item
+  async update(id: number, item: Omit<User, "id">) {
+    // Execute the SQL UPDATE query to modify an existing user by its ID
+    const [result] = await databaseClient.query<Result>(
+      "update user set username = ?, email = ?, password = ? where id = ?",
+      [item.username, item.email, item.password, id],
+    );
 
-  // async update(item: Item) {
-  //   ...
-  // }
+    // If no rows were affected, return null to indicate that the user was not found
+    if (result.affectedRows === 0) {
+      return null;
+    }
+  }
 
   // The D of CRUD - Delete operation
 

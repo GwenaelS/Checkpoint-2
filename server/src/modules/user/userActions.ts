@@ -57,6 +57,9 @@ const getMe: RequestHandler = async (req: AuthRequest, res, next) => {
   }
 };
 
+// The E of BREAD - Edit (Update) operation
+const edit: RequestHandler = async (req, res, next) => {};
+
 // The A of BREAD - Add (Create) operation
 const add: RequestHandler = async (req, res, next) => {
   try {
